@@ -1,0 +1,2 @@
+norm2 <-
+function(x) dnorm(x) * (x ^ 2 - 1)
