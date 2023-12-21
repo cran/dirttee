@@ -7,17 +7,20 @@
 \alias{print.modreg}
 \alias{summary.modreg}
 \alias{print.summary.modreg}
-\title{Coefficients from fitted modreg model}
+\title{Methods for fitted modreg model}
 \usage{
-\method{coefficients}{modreg}(object,...)
-\method{coef}{modreg}(object,...)
-\method{print}{modreg}(x,...)
-\method{summary}{modreg}(object,...)
+\method{coefficients}{modreg}(object, ...)
+
+\method{coef}{modreg}(object, ...)
+
+\method{print}{modreg}(x, ...)
+
+\method{summary}{modreg}(object, ...)
 }
 \arguments{
-\item{x, object}{A modreg object}
-
 \item{...}{further arguments passed to or from other methods}
+
+\item{x, object}{A modreg object}
 }
 \value{
 \code{coef} returns a named numerical vector with coefficients

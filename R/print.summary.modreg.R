@@ -1,5 +1,8 @@
+
+
+
 print.summary.modreg <-
-function(x, ...){
+  function(x, ...){
     cat("\nFormula:\n", x$formula, "\n")
     cat("\nParametric Coefficients:\n")
     if(is.null(x$SE)){

@@ -90,10 +90,15 @@ ex <- c(0.05, 0.2, 0.5, 0.8, 0.95)
 c100 <- colcancer[1:100,]
 exfit <- expectreg.aft(Surv(logfollowup, death) ~ LNE, data = c100, expectiles = ex, smooth="f")
 coef(exfit)
- 
-qu1 <- qureg.aft(Surv(logfollowup, death) ~ sex + LNE, data=c100, smooth="fixed")
+
+qu1 <- qureg.aft(Surv(logfollowup, death) ~ LNE + sex, data=c100, smooth="fixed")
 coef(qu1)
 
+\dontrun{
+
+# takes some time
+qu2 <- qureg.aft(Surv(logfollowup, death) ~ rb(LNE) + sex, data=colcancer[1:200,])
+}
 
 }
 \seealso{

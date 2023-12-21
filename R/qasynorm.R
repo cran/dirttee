@@ -1,3 +1,6 @@
+#' @export
+#' @importFrom stats optimize
+
 qasynorm <-
 function(p,mu=0,sigma=1,tau=0.5)
 {

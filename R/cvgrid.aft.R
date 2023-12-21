@@ -24,9 +24,9 @@ function(yy,delta,B,quantile,DD,nb,constmat,types)
     for(i in 1:nrow(lambdas))
     {
     	penalty[glatterms] = lambdas[i,]
-    	aa <- asyregpen.aft(yy, delta, B, quantile, abs(penalty), DD, nb, constmat,likeli.asynorm)
+    	aa <- asyregpen.aft(yy, delta, B, quantile, abs(penalty), DD, nb, constmat)
 
-        score[i] =  mean(-(delta * log(dasynorm(yy,B%*%aa$a,abs(aa$sigma)+0.0001,quantile)) + (1-delta) * log(1-pasynorm(yy,B%*%aa$a,abs(aa$sigma)+0.0001,quantile)))/(1-aa$diag.hat.ma)^2,na.rm=TRUE)
+        score[i] =  mean(aa$weight*(yy - B%*%aa$a)^2/(1-aa$diag.hat.ma)^2,na.rm=TRUE)
     
     }
     

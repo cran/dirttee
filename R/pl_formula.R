@@ -1,5 +1,19 @@
-pl_formula <-
-function(bwreg){
+#' Creates Formula for the pl function
+#' 
+#' This function takes the bwreg object, as used in the pl function as input. 
+#' It extracts the used formula and identifies the terms using splines. These are
+#' changed, so that they use the "rb" function to create the splines. The left-
+#' hand side is then changed to a "Surv" Object, with the same response, but the
+#' delta is set to all ones.
+#' 
+#' @noRd
+#' 
+#' @importFrom formula.tools rhs.vars lhs
+#' @importFrom rlang call_args
+#' @importFrom stats as.formula
+
+
+pl_formula <- function(bwreg){
   
   rh <- rhs.vars(bwreg$formula)
   bwnames <- unlist(lapply(bwreg$smooth, function(x)x$term))

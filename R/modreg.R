@@ -50,7 +50,7 @@
 #' 
 #' @examples 
 #' 
-#' 
+#' \donttest{
 #' data(colcancer)
 #' colcancer80 <- colcancer[1:80, ]
 #' 
@@ -58,10 +58,9 @@
 #' regL <- modreg(Surv(logfollowup, death) ~ sex + age, data = colcancer80)
 #' summary(regL)
 #' 
-#' \donttest{
 #' # mode regression with P-splines. Convergence criteria are changed to speed up the function
 #' reg <- modreg(Surv(logfollowup, death) ~ sex + s(age, bs = "ps"), data = colcancer80, 
-#'               control = modreg.control(tol_opt = 10^-2, tol_opt2 = 10^-2, tol = 10^-3))
+#' control = modreg.control(tol_opt = 10^-2, tol_opt2 = 10^-2, tol = 10^-3))
 #' summary(reg)
 #' plot(reg)
 #' 

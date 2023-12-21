@@ -1,3 +1,103 @@
+#'Expectile regression for right censored event times using an auxiliary likelihood
+#' 
+#'Estimate a set of conditional expectiles or quantiles with semiparametric predictors
+#'in accelerated failure time models.
+#'For the estimation, the asymmetric loss functions are reformulated into auxiliary likelihoods.
+#'
+#' @aliases qureg.aft
+#' @name expectreg.aft
+#' @export
+#' 
+#' @usage expectreg.aft(
+#'    formula,
+#'    data = NULL,
+#'    smooth = c("cvgrid", "aic", "bic", "lcurve", "fixed"), 
+#'    lambda = 1, 
+#'    expectiles = NA, ci = FALSE)
+#'
+#' qureg.aft(
+#'    formula, 
+#'    data = NULL, 
+#'    smooth = c( "cvgrid", "aic", "bic", "lcurve", "fixed"), 
+#'    lambda = 1, 
+#'    quantiles = NA, 
+#'    ci = FALSE)
+#' 
+#' @param formula An R formula object consisting of the response variable, '~' and the sum of all effects that should be taken into consideration. Each semiparametric effect has to be given through the function \code{\link{rb}}. The response needs to be a call of \code{\link[survival]{Surv}}.
+#' @param data Optional data frame containing the variables used in the model, if the data is not explicitely given in the formula.  
+#' @param smooth There are different smoothing algorithms that tune \code{lambda} to prevent overfitting. Caution, the currently implemented smoothing algorithms can take a long time. Cross validation is done with a grid search ('\code{cvgrid}'). The function can also use a supplied fixed penalty ('\code{fixed}'). The numerical minimisation is also possible with AIC or BIC as score ('\code{aic}', '\code{bic}'). The L-curve ('\code{lcurve}') is a new experimental grid search by Frasso and Eilers.
+#' @param lambda The fixed penalty can be adjusted. Also serves as starting value for the smoothing algorithms.
+#' @param expectiles In default setting, the expectiles (0.01,0.02,0.05,0.1,0.2,0.5,0.8,0.9,0.95,0.98,0.99) are calculated. You may specify your own set of expectiles in a vector. The option may be set to 'density' for the calculation of a dense set of expectiles that enhances the use of \code{\link{cdf.qp}} and \code{\link{cdf.bundle}} afterwards.
+#' @param quantiles Quantiles for which the regression should be performed.
+#' @param ci Whether a covariance matrix for confidence intervals and a \code{\link[=summary.expectreg]{summary}} is calculated.
+#' 
+#' @details For expectile regression, the LAWS loss function
+#' 
+#' \deqn{ S = \sum_{i=1}^{n}{ w_i(p)(y_i - \mu_i(p))^2} }
+#' 
+#' with
+#' 
+#' \eqn{ w_i(p) = p 1_{(y_i > \mu_i(p))} + (1-p) 1_{(y_i < \mu_i(p))} }
+#' 
+#' is repackaged into the asymmetric normal distribution.
+#' Then, an accelerated failure time model is estimated.
+#' This function is based on the 'expectreg' package and uses the same functionality
+#' to include semiparametric predictors.
+#' 
+#' For quantile regression, the loss function is replaced with a likelihood from the asymmetric laplace distribution.
+#' 
+#' @returns An object of class 'expectreg', which is basically a list consisting of:
+#' \item{lambda }{The final smoothing parameters for all expectiles and for all effects in a list.}
+#' \item{intercepts }{The intercept for each expectile.}
+#' \item{coefficients}{ A matrix of all the coefficients, for each base element
+#'   a row and for each expectile a column. }
+#' \item{values}{ The fitted values for each observation and all expectiles,
+#'   separately in a list for each effect in the model,
+#'   sorted in order of ascending covariate values. }
+#' \item{response}{ Vector of the response variable. }
+#' \item{covariates}{ List with the values of the covariates. }
+#' \item{formula}{ The formula object that was given to the function. }
+#' \item{asymmetries}{ Vector of fitted expectile asymmetries as given by argument \code{expectiles}. }
+#' \item{effects}{ List of characters giving the types of covariates. }
+#' \item{helper}{ List of additional parameters like neighbourhood structure for spatial effects or \eqn{\phi} for kriging. }
+#' \item{design}{ Complete design matrix. }
+#' \item{bases}{ Bases components of each covariate. }
+#' \item{fitted}{ Fitted values \eqn{ \hat{y} }. }
+#' \item{covmat}{ Covariance matrix, estimated when \code{ci = TRUE}. }
+#' \item{diag.hatma}{ Diagonal of the hat matrix. Used for model selection criteria. }
+#' \item{data}{ Original data }
+#' \item{smooth_orig}{ Unchanged original type of smoothing. }
+#' %\item{delta_garrote}{ Values of extra weights used for non-negative garrote }
+#' \code{\link[=plot.expectreg]{plot}}, \code{\link[=predict.expectreg]{predict}}, \code{\link[=resid.expectreg]{resid}},
+#' \code{\link[=fitted.expectreg]{fitted}}, \code{\link[=effects.expectreg]{effects}}
+#' and further convenient methods are available for class 'expectreg'.
+#' 
+#' @examples 
+#' 
+#' data(colcancer)
+#' ex <- c(0.05, 0.2, 0.5, 0.8, 0.95)
+#' c100 <- colcancer[1:100,]
+#' exfit <- expectreg.aft(Surv(logfollowup, death) ~ LNE, data = c100, expectiles = ex, smooth="f")
+#' coef(exfit)
+#' 
+#' qu1 <- qureg.aft(Surv(logfollowup, death) ~ LNE + sex, data=c100, smooth="fixed")
+#' coef(qu1)
+#' 
+#' \dontrun{
+#' 
+#' # takes some time
+#' qu2 <- qureg.aft(Surv(logfollowup, death) ~ rb(LNE) + sex, data=colcancer[1:200,])
+#' }
+#' 
+#' @author Fabian Otto-Sobotka \cr Carl von Ossietzky University Oldenburg \cr \url{https://uol.de} \cr
+#' 
+#' @seealso \code{\link{expectreg.ipc}}, \code{\link[expectreg]{expectreg.ls}}
+#' 
+#' @importFrom expectreg rb
+#' @importFrom stats terms predict nlminb
+#' @import parallel
+
+
 expectreg.aft <-
 function(formula,data=NULL, smooth=c("cvgrid","aic","bic","lcurve","fixed"),lambda=1,expectiles=NA,ci=FALSE)
 {  

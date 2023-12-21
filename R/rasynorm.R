@@ -1,3 +1,6 @@
+#' @export
+#' @importFrom stats runif
+
 rasynorm <-
 function(n,mu=0,sigma=1,tau=0.5)
 {

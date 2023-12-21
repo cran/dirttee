@@ -1,5 +1,16 @@
+#' Prepares formula and data for further use
+#' 
+#' This function checks, whether the formula is in the right form. 
+#' It will also prepare the data. If the "data" argument is set to NULL
+#' it will look for it in the environment of the provided formula. It will throw
+#' out all the columns that are not mentioned in the formula.
+#'  
+#' @noRd 
+#' @importFrom formula.tools lhs rhs rhs.vars
+#' @importFrom stats model.matrix update.formula
+
 prepare_formula <-
-function(formula, data, expect = FALSE){
+  function(formula, data, expect = FALSE){
     
     if(!inherits(formula,"formula"))stop('The argument "fomula" needs to be of data type formula.')
     check_formula(formula, expect)

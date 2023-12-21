@@ -1,5 +1,4 @@
-pl <-
-function(bw0, bwreg, response, dat, delta, lambda, ns){
+pl <- function(bw0, bwreg, response, dat, delta, lambda, ns){
 
   if(is.na(bw0)) return(0)
   xb <- predict(bwreg)

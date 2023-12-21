@@ -51,6 +51,7 @@ A nonparametric residual bootstrap is performed to calculate standard errors of 
 \code{variable} bandwidth is the default, which has higher coverage than \code{fix}, but is computationally much more demanding. A \code{seed} can be supplied to guarantee a reproducible result.
 }
 \examples{
+
 \donttest{
 data(colcancer)
 colcancer80 <- colcancer[1:80, ]
@@ -58,9 +59,9 @@ colcancer80 <- colcancer[1:80, ]
 # linear mode regression
 regL <- modreg(Surv(logfollowup, death) ~ sex + age, data = colcancer80)
 
-# bootstrap with a fixed bandwidth and 5 iterations, chosen to speed up the function. 
-# Should in practice be much more than 5 iterations.
-btL <- boot.modreg(regL, 5, bw = "fixed", level = 0.9, seed = 100)
+# bootstrap with a fixed bandwidth and 3 iterations, chosen to speed up the function. 
+# Should in practice be much more than 3 iterations.
+btL <- boot.modreg(regL, 3, bw = "fixed", level = 0.9, seed = 100)
 
 # coefficients, SE and confidence intervals
 cbind(coef(regL), btL$confparams)

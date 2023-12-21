@@ -1,3 +1,5 @@
+#' @importFrom stats dnorm
+
 bwidth_plugin <-
 function(residuals, X){
 

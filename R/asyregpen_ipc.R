@@ -1,3 +1,4 @@
+#' @importFrom stats lsfit
 asyregpen_ipc <-
 function(y, B, p, lambda, DD,nb, constmat, KMweights, hat1) #!
     ###### Asymmetric regression with difference penalty

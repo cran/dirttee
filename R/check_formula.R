@@ -1,5 +1,17 @@
-check_formula <-
-function(formula, expect){
+#' Checks the formula for further usage.
+#' 
+#' This function checks the formula for further usage in e.g. the "modreg" or
+#' "expetreg_surv" function. The right hand side of the formula needs to consist
+#' of a "surv" object as provided by the surv function in the survival package. 
+#' Furthermore does this function look for applied functions on the right hand 
+#' side of the formula. It only allows the functions "s" and "I". If a spline 
+#' with the "s" function is found, it also checks its arguments. There needs to 
+#' be the argument "bs" and it needs to be set to "ps".
+#' 
+#' @noRd 
+#' @importFrom rlang call_args
+
+check_formula <- function(formula, expect){
   vars <- rhs.vars(formula)
   for(v in seq_along(vars)){
     str <-strsplit(vars[[v]], "")[[1]]

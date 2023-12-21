@@ -1,3 +1,10 @@
+#' @export
+#' 
+#' @importFrom expectreg rb
+#' @importFrom stats terms
+#' 
+#' 
+
 qureg.aft <-
 function(formula,data=NULL, smooth=c("cvgrid","aic","bic","lcurve","fixed"),lambda=1,quantiles=NA,ci=FALSE)
 {  

@@ -11,14 +11,14 @@
 
 \item{...}{Additional arguments to pass to \code{\link[mgcv]{predict.gam}}.}
 }
+\value{
+A vector or matrix of predictions. For \code{type = "terms"} this is a matrix with a column per term.
+}
 \description{
 Takes a fitted modreg object produced by \code{modreg} and produces predictions. New sets of covariates can by supplied through \code{newdata}.
 }
 \details{
 This function is a wrapper for \code{\link[mgcv]{predict.gam}}.
-}
-\value{
-A vector or matrix of predictions. For \code{type = "terms"} this is a matrix with a column per term.
 }
 \examples{
 
@@ -31,5 +31,6 @@ reg <- modreg(Surv(logfollowup, death) ~ sex + s(age, bs = "ps"), data =
 colcancer70, control = mc)
 ndat <- data.frame(sex = rep(colcancer70$sex[1], 200), age = seq(50, 90, length = 200))
 pr <- predict(reg, newdata = ndat)
+
 
 }

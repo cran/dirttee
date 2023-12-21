@@ -68,6 +68,7 @@
 #'                         expectiles = c(0.05, 0.2, 0.5, 0.8, 0.95))
 #' coef(expreg)
 #' 
+#' \donttest{
 #' # with p-splines, smoothing parameter selection with schall algorithm
 #' expreg2 <- expectreg.ipc(Surv(logfollowup, death) ~ sex + rb(age), data = colcancer)
 #' # smoothing parameter selection with AIC
@@ -79,7 +80,7 @@
 #' plot(expreg2)
 #' plot(expreg3)
 #' plot(expreg4)
-#'  
+#' }
 #' 
 #' 
 #' 

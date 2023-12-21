@@ -1,5 +1,6 @@
-regIt <-
-function(formula, data, delta, h, maxit, tol, residuals, pred, response, lambda, ns, p){
+#' @keywords internal
+
+regIt <- function(formula, data, delta, h, maxit, tol, residuals, pred, response, lambda, ns, p){
 
   n <- length(response)
   
@@ -58,3 +59,4 @@ function(formula, data, delta, h, maxit, tol, residuals, pred, response, lambda,
  
   list(reg = reg, bw = h, score = score, score_raw = score_raw, converged = converged, iterations = counter)
 }
+
